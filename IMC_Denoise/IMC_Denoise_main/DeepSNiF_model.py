@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from keras.layers import Activation, UpSampling2D, Convolution2D, MaxPooling2D, BatchNormalization, Dropout, concatenate, add
+from tensorflow.keras.layers import Activation, UpSampling2D, Conv2D, MaxPooling2D, BatchNormalization, Dropout, concatenate, add
 
 def conv_bn_relu_gen(nb_filter, rk, ck, st, names, trainable_label = True):
     def f(input):
-        conv = Convolution2D(nb_filter, kernel_size=(rk, ck), strides=(st,st),padding="same", 
+        conv = Conv2D(nb_filter, kernel_size=(rk, ck), strides=(st,st),padding="same", 
                              use_bias=False,kernel_initializer="truncated_normal",name='conv-'+names)(input)
         conv_norm = BatchNormalization(name='BN-'+names, trainable=trainable_label)(conv)
         conv_norm_relu = Activation(activation = 'relu',name='Relu-'+names)(conv_norm)
@@ -12,7 +12,7 @@ def conv_bn_relu_gen(nb_filter, rk, ck, st, names, trainable_label = True):
 
 def conv_bn(nb_filter, rk, ck, st, names):
     def f(input):
-        conv = Convolution2D(nb_filter, kernel_size=(rk, ck), strides=(st,st),padding="same", 
+        conv = Conv2D(nb_filter, kernel_size=(rk, ck), strides=(st,st),padding="same", 
                              use_bias=False,kernel_initializer="truncated_normal",name='conv-'+names)(input)
         return conv
     return f
@@ -73,18 +73,18 @@ def DeepSNiF_net(input, names, loss_func,trainable_label = True):
     Features9 = ResBlock(filter_num, 3, 3, 1, res_names=names+'ResBlock9',trainable_label=trainable_label)(merge4)
     
     if loss_func == "I_divergence":
-        Features10 = Convolution2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same", 
+        Features10 = Conv2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same", 
                                activation="softplus", use_bias = False, 
                                kernel_initializer="truncated_normal",
                                name='Prediction_softplus')(Features9)
     elif loss_func == "mse":
-        Features10 = Convolution2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same", 
+        Features10 = Conv2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same", 
                                activation="linear", use_bias = False, 
                                kernel_initializer="truncated_normal",
                                name='Prediction_linear')(Features9)
         
     elif loss_func == "mse_relu":
-        Features10 = Convolution2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same", 
+        Features10 = Conv2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same", 
                                activation="relu", use_bias = False, 
                                kernel_initializer="truncated_normal",
                                name='Prediction_relu')(Features9)
@@ -117,18 +117,18 @@ def DeepSNiF_net_small(input, names, loss_func,trainable_label = True):
     Features7 = conv_bn_relu_gen(filter_num, 3, 3, 1, names+'Block7',trainable_label=trainable_label)(merge3)
     
     if loss_func == "I_divergence":
-        Features8 = Convolution2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same", 
+        Features8 = Conv2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same", 
                                activation="softplus", use_bias = False, 
                                kernel_initializer="truncated_normal",
                                name='Prediction_softplus')(Features7)
     elif loss_func == "mse":
-        Features8 = Convolution2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same", 
+        Features8 = Conv2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same", 
                                activation="linear", use_bias = False, 
                                kernel_initializer="truncated_normal",
                                name='Prediction_linear')(Features7)
         
     elif loss_func == "mse_relu":
-        Features8 = Convolution2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same", 
+        Features8 = Conv2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same", 
                                activation="relu", use_bias = False, 
                                kernel_initializer="truncated_normal",
                                name='Prediction_relu')(Features7)

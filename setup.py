@@ -11,12 +11,13 @@ from setuptools import setup, find_packages
 setup(name='IMC_Denoise',
       packages=find_packages(),
       install_requires=[
-          "numpy",
-          "scipy",
-          "matplotlib",
-          "scikit-learn",
-          "tensorflow",
-          "keras",
-          "tifffile"
+          "numpy==1.21.0",
+          "scipy=1.4.1",
+          "matplotlib=3.3.4",
+          "scikit-learn==0.24.2",
+          "tensorflow==2.6.0",
+          "keras==2.6.0",
+          "tifffile==2023.7.10",
+          "protobuf==3.20.3"
         ]
       )

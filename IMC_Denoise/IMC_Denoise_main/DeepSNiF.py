@@ -6,11 +6,11 @@ from os.path import join, exists, abspath
 import gc
 
 from sklearn.model_selection import train_test_split
-#import tensorflow.keras as keras
-from keras import optimizers
-from keras.models import Model
-from keras.layers import Input
-from keras.callbacks import Callback, ModelCheckpoint, ReduceLROnPlateau
+import tensorflow as tf
+from tensorflow.keras import optimizers
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Input
+from tensorflow.keras.callbacks import Callback, ModelCheckpoint, ReduceLROnPlateau
 
 from .DIMR import DIMR
 from .DeepSNiF_model import DeepSNiF_net, DeepSNiF_net_small
@@ -18,7 +18,6 @@ from .loss_functions import create_I_divergence, create_mse
 from ..DeepSNiF_utils.DeepSNiF_TrainGenerator import DeepSNiF_Training_DataGenerator, DeepSNiF_Validation_DataGenerator
 from ..Anscombe_transform.Anscombe_transform_functions import Anscombe_forward, Anscombe_inverse_exact_unbiased, Anscombe_inverse_direct
 
-import tensorflow as tf
 import logging
 logger = logging.getLogger(__name__)
 
@@ -33,10 +32,14 @@ if gpus:
         print(e)
 
 class LossHistory(Callback):
-    def on_train_begin(self, logs={}):
+    def on_train_begin(self, logs=None):
+        if logs is None:
+            logs = {}
         self.losses = []
 
-    def on_batch_end(self, batch, logs={}):
+    def on_batch_end(self, batch, logs=None):
+        if logs is None:
+            logs = {}
         self.losses.append(logs.get('loss'))
 
 class DeepSNiF():
